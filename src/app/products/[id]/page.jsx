@@ -2,10 +2,63 @@ import { getSingleProduct } from "@/actions/server/products";
 import Image from "next/image";
 import React from "react";
 
+export async function generateMetadata({ params }) {
+  const { id } = await params;
+  console.log(id)
+  const product = await getSingleProduct(id);
+
+  if (!product) {
+    return {
+      title: "Product Not Found",
+      description: "The product you are looking for does not exist.",
+    };
+  }
+
+  const { title, bangla, image, description } = product;
+  const pageTitle = `${title} | Hero Kidz`;
+
+  return {
+    title: pageTitle,
+    description:
+      description ||
+      bangla ||
+      "Check out this amazing product on Hero Kidz.",
+    url: `https://yourapp.com/product/${id}`,
+    image: image || "https://i.ibb.co.com/s9brDwvd",
+    type: "product",
+    openGraph: {
+      title: pageTitle,
+      description: description || bangla,
+      url: `https://yourapp.com/product/${id}`,
+      site_name: "Hero Kidz",
+      images: [
+        {
+          url: image || "https://i.ibb.co.com/s9brDwvd",
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+      locale: "en_US",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      site: "@YourTwitterHandle",
+      creator: "@YourTwitterHandle",
+      title: pageTitle,
+      description: description || bangla,
+      images: [image || "https://i.ibb.co.com/s9brDwvd"],
+    },
+    robots: "index, follow",
+    keywords: ["product", "e-commerce", "react", "next.js", "mern"],
+  };
+}
+
 const SingleProduct = async ({ params }) => {
-  console.log(params);
   const { id } = await params;
   const product = await getSingleProduct(id);
+  console.log(id)
   const {
     title,
     bangla,
@@ -27,8 +80,8 @@ const SingleProduct = async ({ params }) => {
       {/* Image */}
       <div className="bg-white rounded-2xl shadow overflow-hidden">
         <Image
-        width={200}
-        height={100}
+          width={200}
+          height={100}
           src={image}
           alt={title}
           className="w-full h-full object-cover"></Image>

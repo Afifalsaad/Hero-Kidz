@@ -13,6 +13,7 @@ const ToysCard = ({ toy }) => {
     reviews,
     sold,
     info,
+    _id,
   } = toy;
 
   const discountedPrice = price - Math.round((price * discount) / 100);
@@ -25,7 +26,8 @@ const ToysCard = ({ toy }) => {
           src={image}
           alt={title}
           className="w-full h-56 object-cover"
-          width={200} height={100}></Image>
+          width={200}
+          height={100}></Image>
         {discount > 0 && (
           <span className="absolute top-3 left-3 bg-primary text-white text-xs font-semibold px-2 py-1 rounded">
             {discount}% OFF
@@ -64,7 +66,9 @@ const ToysCard = ({ toy }) => {
 
         {/* Buttons */}
         <div className="mt-auto flex gap-3">
-          <Link href={`products/${toy._id}`} className="flex-1 btn btn-primary btn-outline py-2 rounded-lg transition">
+          <Link
+            href={`products/${_id}`}
+            className="flex-1 btn btn-primary btn-outline py-2 rounded-lg transition">
             See Details
           </Link>
           <button className="flex-1 btn btn-primary py-2 rounded-lg hover:bg-orange-700 transition">

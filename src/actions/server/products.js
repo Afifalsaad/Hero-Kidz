@@ -9,7 +9,7 @@ export const getProducts = async () => {
 };
 
 export const getSingleProduct = async (id) => {
-  if (id.length === !24) {
+  if (id.length !== 24) {
     return {};
   }
 
