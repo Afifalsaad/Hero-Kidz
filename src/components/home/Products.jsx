@@ -1,5 +1,4 @@
 import React from "react";
-import toys from "@/data/toys.json";
 import ToysCard from "../cards/OurProductsCard";
 import { getProducts } from "@/actions/server/products";
 

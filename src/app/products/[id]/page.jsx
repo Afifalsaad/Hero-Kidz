@@ -1,10 +1,11 @@
 import { getSingleProduct } from "@/actions/server/products";
+import CartButton from "@/components/buttons/CartButton";
 import Image from "next/image";
 import React from "react";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
-  console.log(id)
+  console.log(id);
   const product = await getSingleProduct(id);
 
   if (!product) {
@@ -20,9 +21,7 @@ export async function generateMetadata({ params }) {
   return {
     title: pageTitle,
     description:
-      description ||
-      bangla ||
-      "Check out this amazing product on Hero Kidz.",
+      description || bangla || "Check out this amazing product on Hero Kidz.",
     url: `https://yourapp.com/product/${id}`,
     image: image || "https://i.ibb.co.com/s9brDwvd",
     type: "product",
@@ -58,7 +57,7 @@ export async function generateMetadata({ params }) {
 const SingleProduct = async ({ params }) => {
   const { id } = await params;
   const product = await getSingleProduct(id);
-  console.log(id)
+  console.log(id);
   const {
     title,
     bangla,
@@ -122,9 +121,7 @@ const SingleProduct = async ({ params }) => {
         </ul>
 
         {/* Button */}
-        <button className="w-full md:w-1/2 bg-primary text-white py-3 rounded-xl hover:bg-orange-650 transition">
-          Buy Now
-        </button>
+        <CartButton product={product}></CartButton>
       </div>
 
       {/* Description + Q&A */}
