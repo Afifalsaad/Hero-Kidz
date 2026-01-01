@@ -1,3 +1,5 @@
+import CredentialsProvider from "next-auth/providers/credentials";
+
 export const authOptions = {
   // Configure one or more authentication providers
   providers: [
@@ -8,6 +10,7 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
+        console.log(credentials);
         return null;
       },
     }),

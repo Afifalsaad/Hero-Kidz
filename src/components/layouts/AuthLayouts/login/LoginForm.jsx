@@ -1,18 +1,38 @@
+"use client";
 import Link from "next/link";
 import React from "react";
 import { FaGoogle } from "react-icons/fa";
+import { signIn } from "next-auth/react";
 
 const LoginForm = () => {
+  const handleLogin = (e) => {
+    e.preventDefault();
+
+    const form = e.target;
+
+    const loginInfo = {
+      email: form.email.value,
+      password: form.password.value,
+    };
+
+    signIn("credentials", {
+      email: loginInfo.email,
+      password: loginInfo.password,
+      redirect: false,
+    });
+  };
+
   return (
     <div>
       <div className="min-h-screen flex items-center justify-center">
         <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
           <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
 
-          <form className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <label className="block mb-1 text-sm font-medium">Email</label>
               <input
+                name="email"
                 type="email"
                 placeholder="Enter your email"
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none"
@@ -22,6 +42,7 @@ const LoginForm = () => {
             <div>
               <label className="block mb-1 text-sm font-medium">Password</label>
               <input
+                name="password"
                 type="password"
                 placeholder="Enter your password"
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none "
@@ -42,7 +63,7 @@ const LoginForm = () => {
             Continue with Google
           </button>
 
-          <p  className="mt-4 text-center text-sm">
+          <p className="mt-4 text-center text-sm">
             Don&apos;t have an account?{" "}
             <Link href="/register" className="text-primary hover:underline">
               Register
