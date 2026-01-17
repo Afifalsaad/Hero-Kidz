@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/layouts/Navbar";
 import Footer from "@/components/layouts/Footer";
 import localFont from "next/font/local";
+import NextAuthProvider from "@/provider/NextAuthProvider";
 
 const poppins = Poppins({
   weight: ["100", "200", "400", "500", "600", "800"],
@@ -14,19 +15,17 @@ export const fontBangla = localFont({
 
 export const metadata = {
   title: "Hero Kidz",
-  description:
-    "A website where you find educative toys for your child.",
+  description: "A website where you find educative toys for your child.",
 
   url: "https://hero-kidz-amber.vercel.app/",
 
   image: "https://i.ibb.co.com/s9brDwvd",
-  type: "website", 
+  type: "website",
 
   openGraph: {
     title: "Hero Kidz",
-    description:
-      "A website where you find educative toys for your child.",
-    url: "https://yourapp.com",
+    description: "A website where you find educative toys for your child.",
+    url: "https://hero-kidz-amber.vercel.app/",
     site_name: "Hero Kidz",
     images: [
       {
@@ -46,19 +45,14 @@ export const metadata = {
     type: "website",
   },
 
-
   twitter: {
-    card: "summary_large_image", 
-    site: "@YourTwitterHandle", 
-    creator: "@YourTwitterHandle", 
+    card: "summary_large_image",
+    site: "@YourTwitterHandle",
+    creator: "@YourTwitterHandle",
     title: "Hero Kidz",
-    description:
-      "A website where you find educative toys for your child.",
-    images: [
-      "https://i.ibb.co.com/fYmhk8J8",
-    ],
+    description: "A website where you find educative toys for your child.",
+    images: ["https://i.ibb.co.com/fYmhk8J8"],
   },
-
 
   icons: {
     icon: "/favicon.ico",
@@ -66,27 +60,28 @@ export const metadata = {
     apple: "/apple-touch-icon.png",
   },
 
-
   robots: "index, follow",
   keywords: ["react", "next.js", "full stack", "MERN", "productivity"],
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={`${poppins.className} antialiased`}>
-        <header className="py-2 md:max-w-11/12 mx-auto">
-          <Navbar></Navbar>
-        </header>
+    <NextAuthProvider>
+      <html lang="en">
+        <body className={`${poppins.className} antialiased`}>
+          <header className="py-2 md:max-w-11/12 mx-auto">
+            <Navbar></Navbar>
+          </header>
 
-        <main className="py-2 md:max-w-11/12 mx-auto min-h-[calc(100svh-302px)]">
-          {children}
-        </main>
+          <main className="py-2 md:max-w-11/12 mx-auto min-h-[calc(100svh-302px)]">
+            {children}
+          </main>
 
-        <footer>
-          <Footer></Footer>
-        </footer>
-      </body>
-    </html>
+          <footer>
+            <Footer></Footer>
+          </footer>
+        </body>
+      </html>
+    </NextAuthProvider>
   );
 }

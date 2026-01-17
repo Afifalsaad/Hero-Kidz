@@ -57,7 +57,6 @@ export async function generateMetadata({ params }) {
 const SingleProduct = async ({ params }) => {
   const { id } = await params;
   const product = await getSingleProduct(id);
-  console.log(id);
   const {
     title,
     bangla,

@@ -18,6 +18,7 @@ const RegisterForm = () => {
     };
 
     const result = await postUser(userData);
+    console.log(result);
     if (result.acknowledged) {
       alert("register successful. please login");
       router.push("/login");

@@ -1,9 +1,11 @@
 "use client";
+import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 
 const CartButton = ({ product }) => {
-  const isLogin = true;
+  const session = useSession();
+  const isLogin = session?.status == "authenticated";
   const router = useRouter();
   const pathName = usePathname();
 

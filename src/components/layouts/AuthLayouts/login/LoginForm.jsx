@@ -3,9 +3,12 @@ import Link from "next/link";
 import React from "react";
 import { FaGoogle } from "react-icons/fa";
 import { signIn } from "next-auth/react";
+import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
 
 const LoginForm = () => {
-  const handleLogin = (e) => {
+  const router = useRouter();
+  const handleLogin = async (e) => {
     e.preventDefault();
 
     const form = e.target;
@@ -15,11 +18,18 @@ const LoginForm = () => {
       password: form.password.value,
     };
 
-    signIn("credentials", {
+    const result = await signIn("credentials", {
       email: loginInfo.email,
       password: loginInfo.password,
       redirect: false,
     });
+    console.log(result);
+    if (result.ok) {
+      Swal.fire("success", "Welcome to Kidz Hub", "success");
+      router.push("/");
+    } else {
+      Swal.fire("error", "Email password not matched", "error");
+    }
   };
 
   return (

@@ -1,7 +1,7 @@
 "use server";
 
 import { collections, dbConnect } from "@/lib/dbConnect";
-import bcryptjs from "bcryptjs";
+import bcrypt from "bcryptjs";
 
 export const postUser = async (payload) => {
   const { email, password, name } = payload;
@@ -20,7 +20,7 @@ export const postUser = async (payload) => {
     provider: "credentials",
     name,
     email,
-    password: await bcryptjs.hash(password, 10),
+    password: await bcrypt.hash(password, 10),
     role: "user",
   };
 
@@ -31,5 +31,24 @@ export const postUser = async (payload) => {
       ...result,
       insertedId: result.insertedId.toString(),
     };
+  }
+};
+
+export const loginUser = async (payload) => {
+  const { email, password } = payload;
+
+  if (!email || !password) return null;
+
+  const user = await dbConnect(collections.USER).findOne({ email });
+
+  if (!user) {
+    return null;
+  }
+
+  const isMatched = await bcrypt.compare(password, user.password);
+  if (isMatched) {
+    return user;
+  } else {
+    return null;
   }
 };
