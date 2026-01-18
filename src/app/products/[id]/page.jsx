@@ -5,7 +5,6 @@ import React from "react";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
-  console.log(id);
   const product = await getSingleProduct(id);
 
   if (!product) {

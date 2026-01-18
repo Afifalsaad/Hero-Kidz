@@ -1,11 +1,14 @@
 "use client";
 import { postUser } from "@/actions/server/auth";
-import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { FaGoogle } from "react-icons/fa";
 
 const RegisterForm = () => {
   const router = useRouter();
+  const params = useSearchParams();
+  const callBackUrl = params.get("callbackUrl") || "/";
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -21,7 +24,12 @@ const RegisterForm = () => {
     console.log(result);
     if (result.acknowledged) {
       alert("register successful. please login");
-      router.push("/login");
+      // router.push("/login");
+      const res = await signIn("credentials", {
+        email: form.email.value,
+        password: form.password.value,
+        callbackUrl: callBackUrl,
+      });
     }
   };
   return (

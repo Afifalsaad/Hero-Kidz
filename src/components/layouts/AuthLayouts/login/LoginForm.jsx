@@ -1,13 +1,15 @@
 "use client";
 import Link from "next/link";
 import React from "react";
-import { FaGoogle } from "react-icons/fa";
 import { signIn } from "next-auth/react";
 import Swal from "sweetalert2";
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import SocialButton from "@/components/buttons/SocialButton";
 
 const LoginForm = () => {
-  const router = useRouter();
+  const params = useSearchParams();
+  const callBack = params.get("callbackUrl") || "/";
+  console.log(params.get("callbackUrl") || "/");
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -21,12 +23,11 @@ const LoginForm = () => {
     const result = await signIn("credentials", {
       email: loginInfo.email,
       password: loginInfo.password,
-      redirect: false,
+      // redirect: false,
+      callbackUrl: params.get("callbackUrl") || "/",
     });
-    console.log(result);
     if (result.ok) {
       Swal.fire("success", "Welcome to Kidz Hub", "success");
-      router.push("/");
     } else {
       Swal.fire("error", "Email password not matched", "error");
     }
@@ -68,14 +69,13 @@ const LoginForm = () => {
 
           <div className="my-4 text-center text-sm text-gray-500">or</div>
 
-          <button className="w-full flex items-center justify-center gap-2 border py-2 rounded-lg hover:bg-gray-100 transition">
-            <FaGoogle />
-            Continue with Google
-          </button>
+          <SocialButton></SocialButton>
 
           <p className="mt-4 text-center text-sm">
             Don&apos;t have an account?{" "}
-            <Link href="/register" className="text-primary hover:underline">
+            <Link
+              href={`/register?callbackUrl=${callBack}`}
+              className="text-primary hover:underline">
               Register
             </Link>
           </p>

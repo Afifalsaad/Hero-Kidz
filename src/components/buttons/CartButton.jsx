@@ -21,7 +21,7 @@ const CartButton = ({ product }) => {
     <div>
       <button
         onClick={addToCart}
-        className="w-full md:w-1/2 bg-primary text-white py-3 rounded-xl hover:bg-orange-650 transition">
+        className="w-full md:w-1/2 bg-primary text-white py-3 rounded-xl hover:bg-orange-650 transition hover:cursor-pointer">
         Add to Cart
       </button>
     </div>
