@@ -3,13 +3,13 @@ import Link from "next/link";
 import React from "react";
 import { signIn } from "next-auth/react";
 import Swal from "sweetalert2";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import SocialButton from "@/components/buttons/SocialButton";
 
 const LoginForm = () => {
   const params = useSearchParams();
   const callBack = params.get("callbackUrl") || "/";
-  console.log(params.get("callbackUrl") || "/");
+  const router = useRouter();
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -23,13 +23,18 @@ const LoginForm = () => {
     const result = await signIn("credentials", {
       email: loginInfo.email,
       password: loginInfo.password,
-      // redirect: false,
+      redirect: false,
       callbackUrl: params.get("callbackUrl") || "/",
     });
     if (result.ok) {
       Swal.fire("success", "Welcome to Kidz Hub", "success");
+      router.push(callBack);
     } else {
-      Swal.fire("error", "Email password not matched", "error");
+      Swal.fire(
+        "error",
+        "Email password not matched. Try Google Login/Register",
+        "error"
+      );
     }
   };
 

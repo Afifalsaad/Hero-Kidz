@@ -4,6 +4,7 @@ import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { FaGoogle } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 const RegisterForm = () => {
   const router = useRouter();
@@ -21,15 +22,19 @@ const RegisterForm = () => {
     };
 
     const result = await postUser(userData);
-    console.log(result);
     if (result.acknowledged) {
-      alert("register successful. please login");
-      // router.push("/login");
       const res = await signIn("credentials", {
         email: form.email.value,
         password: form.password.value,
+        redirect: false,
         callbackUrl: callBackUrl,
       });
+      if (res.ok) {
+        Swal.fire("success", "register successful. please login", "success");
+        router.push(callBackUrl);
+      } else {
+        Swal.fire("error", "Registration failed", "error");
+      }
     }
   };
   return (

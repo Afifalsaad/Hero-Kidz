@@ -24,7 +24,7 @@ export const authOptions = {
 
       const isExists = await dbConnect(collections.USER).findOne({
         email: user.email,
-        provider: account?.provider,
+        // provider: account?.provider,
       });
       if (isExists) {
         return true;
