@@ -1,87 +1,91 @@
 "use client";
-import { deleteCartItem } from "@/actions/server/cart";
+import {
+  decreaseItemDb,
+  deleteCartItem,
+  increaseItemDb,
+} from "@/actions/server/cart";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { HiOutlineMinus, HiOutlinePlus, HiOutlineTrash } from "react-icons/hi";
 import Swal from "sweetalert2";
 
-const CartItems = ({ item }) => {
+const CartItems = ({ item, removeItem, updateQuantity }) => {
   const { title, image, quantity, price, _id } = item;
+  const [loading, setLoading] = useState(false);
 
   const handleDeleteItem = () => {
     Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      title: "Remove item?",
+      text: "This product will be removed from your cart.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "Remove",
     }).then(async (result) => {
       if (result.isConfirmed) {
         const result = await deleteCartItem(_id);
         if (result.success) {
-          Swal.fire({
-            title: "Deleted!",
-            text: "Your file has been deleted.",
-            icon: "success",
-          });
-        } else {
-          Swal.fire({
-            title: "Opps!",
-            text: "Something went wrong.",
-            icon: "error",
-          });
+          removeItem(_id);
+          Swal.fire("Removed!", "", "success");
         }
       }
     });
   };
 
-  return (
-    <div>
-      <div className="card card-side bg-base-100 shadow-xl border border-base-200 p-4 flex flex-col sm:flex-row items-center gap-4 my-5">
-        {/* Product Image */}
-        <figure className="w-24 h-24 shrink-0">
-          <Image alt={title} src={image} width={300} height={300}></Image>
-        </figure>
+  const increaseQuantity = async () => {
+    setLoading(true);
+    const result = await increaseItemDb(_id, quantity);
+    if (result.success) updateQuantity(_id, quantity + 1);
+    setLoading(false);
+  };
 
-        <div className="flex flex-col sm:flex-row justify-between w-full items-center gap-4">
-          {/* Title and Price */}
-          <div className="text-center sm:text-left flex-1">
-            <h2 className="card-title text-base md:text-lg mb-1">{title}</h2>
-            <p className="text-primary font-bold text-lg">৳{price}</p>
+  const decreaseQuantity = async () => {
+    setLoading(true);
+    const result = await decreaseItemDb(_id, quantity);
+    if (result.success) updateQuantity(_id, quantity - 1);
+    setLoading(false);
+  };
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 my-4">
+      {/* PRODUCT CARD */}
+      <div className="lg:col-span-3">
+        <div className="flex items-center gap-4 bg-base-100 border border-base-200 rounded-xl p-4 shadow-sm hover:shadow-md transition">
+          <figure className="w-24 h-24 shrink-0">
+            <Image alt={title} src={image} width={300} height={300}></Image>
+          </figure>
+
+          <div className="flex-1">
+            <h3 className="font-medium leading-tight line-clamp-2">{title}</h3>
+            <p className="text-primary font-semibold mt-1">৳{price}</p>
           </div>
 
-          {/* Quantity Controls & Delete Button */}
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-3 bg-base-200 p-1 rounded-lg">
-              {/* Minus Button */}
-              <button
-                className="btn btn-circle btn-xs btn-ghost"
-                aria-label="Decrease quantity">
-                <HiOutlineMinus size={16} />
-              </button>
-
-              <span className="font-bold text-lg min-w-5 text-center">
-                {quantity}
-              </span>
-
-              {/* Plus Button */}
-              <button
-                className="btn btn-circle btn-xs btn-ghost"
-                aria-label="Increase quantity">
-                <HiOutlinePlus size={16} />
-              </button>
-            </div>
-
-            {/* Delete Button */}
+          <div className="flex items-center gap-3">
             <button
-              onClick={handleDeleteItem}
-              className="btn btn-error btn-outline btn-sm btn-circle"
-              title="Remove item">
-              <HiOutlineTrash size={20} />
+              onClick={decreaseQuantity}
+              disabled={quantity === 1 || loading}
+              className="btn btn-xs btn-ghost">
+              <HiOutlineMinus />
+            </button>
+
+            <span className="font-semibold w-6 text-center">{quantity}</span>
+
+            <button
+              onClick={increaseQuantity}
+              disabled={quantity === 10 || loading}
+              className="btn btn-xs btn-ghost">
+              <HiOutlinePlus />
             </button>
           </div>
+
+          <p className="font-semibold min-w-20 text-right">
+            ৳{price * quantity}
+          </p>
+
+          <button
+            onClick={handleDeleteItem}
+            className="btn btn-xs btn-ghost text-error">
+            <HiOutlineTrash size={18} />
+          </button>
         </div>
       </div>
     </div>

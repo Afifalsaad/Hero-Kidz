@@ -74,3 +74,53 @@ export const deleteCartItem = async (id) => {
     return { success: Boolean(result.deletedCount) };
   } catch {}
 };
+
+export const increaseItemDb = async (id, quantity) => {
+  try {
+    const user = await getServerSession(authOptions);
+    if (!user) return [];
+
+    if (quantity >= 10) {
+      return {
+        success: false,
+        message: "You can't buy more than 10 items at a time",
+      };
+    }
+
+    const updatedData = {
+      $inc: {
+        quantity: 1,
+      },
+    };
+
+    const query = { _id: new ObjectId(id) };
+    const result = await cartCollection.updateOne(query, updatedData);
+
+    return { success: Boolean(result.modifiedCount) };
+  } catch {}
+};
+
+export const decreaseItemDb = async (id, quantity) => {
+  try {
+    const user = await getServerSession(authOptions);
+    if (!user) return [];
+
+    if (quantity <= 1) {
+      return {
+        success: false,
+        message: "Cart Items can't be empty",
+      };
+    }
+
+    const updatedData = {
+      $inc: {
+        quantity: -1,
+      },
+    };
+
+    const query = { _id: new ObjectId(id) };
+    const result = await cartCollection.updateOne(query, updatedData);
+
+    return { success: Boolean(result.modifiedCount) };
+  } catch {}
+};

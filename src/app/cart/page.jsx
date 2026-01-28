@@ -1,11 +1,11 @@
 import { getCartItem } from "@/actions/server/cart";
 import CartItems from "@/components/cards/CartItems";
+import Cart from "@/components/home/Cart";
 import React from "react";
 
 const CartPage = async () => {
   const rawCartItems = await getCartItem();
   const cartItems = JSON.parse(JSON.stringify(rawCartItems));
-  console.log(cartItems);
   return (
     <div className="">
       <div className="mb-8 border-b border-base-200 pb-5">
@@ -22,9 +22,7 @@ const CartPage = async () => {
         </p>
       </div>
 
-      {cartItems.map((item) => (
-        <CartItems key={item._id} item={item}></CartItems>
-      ))}
+      <Cart cartItems={cartItems}></Cart>
     </div>
   );
 };
