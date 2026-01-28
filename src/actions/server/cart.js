@@ -2,7 +2,10 @@
 
 import { authOptions } from "@/lib/authOptions";
 import { dbConnect, collections } from "@/lib/dbConnect";
+import { ObjectId } from "mongodb";
 import { getServerSession } from "next-auth";
+import { revalidatePath } from "next/cache";
+import { cache } from "react";
 
 const cartCollection = dbConnect(collections.CART);
 
@@ -40,7 +43,7 @@ export const handleCart = async ({ product, inc = true }) => {
   }
 };
 
-export const getCartItem = async () => {
+export const getCartItem = cache(async () => {
   try {
     const user = await getServerSession(authOptions);
     if (!user) return [];
@@ -51,4 +54,23 @@ export const getCartItem = async () => {
   } catch (err) {
     console.log(err);
   }
+});
+
+export const deleteCartItem = async (id) => {
+  try {
+    const user = await getServerSession(authOptions);
+    if (!user) return [];
+
+    if (id.length != 24) {
+      return { success: false };
+    }
+    const query = { _id: new ObjectId(id) };
+    const result = await cartCollection.deleteOne(query);
+
+    if (Boolean(result.deletedCount)) {
+      revalidatePath("/cart");
+    }
+
+    return { success: Boolean(result.deletedCount) };
+  } catch {}
 };

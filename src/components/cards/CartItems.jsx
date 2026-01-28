@@ -1,13 +1,40 @@
 "use client";
+import { deleteCartItem } from "@/actions/server/cart";
 import Image from "next/image";
 import React from "react";
 import { HiOutlineMinus, HiOutlinePlus, HiOutlineTrash } from "react-icons/hi";
+import Swal from "sweetalert2";
 
 const CartItems = ({ item }) => {
   const { title, image, quantity, price, _id } = item;
 
   const handleDeleteItem = () => {
-    alert(_id);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const result = await deleteCartItem(_id);
+        if (result.success) {
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your file has been deleted.",
+            icon: "success",
+          });
+        } else {
+          Swal.fire({
+            title: "Opps!",
+            text: "Something went wrong.",
+            icon: "error",
+          });
+        }
+      }
+    });
   };
 
   return (
