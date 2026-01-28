@@ -20,7 +20,7 @@ export const authOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
-      console.log({ user, account, profile, email, credentials });
+      // console.log({ user, account, profile, email, credentials });
 
       const isExists = await dbConnect(collections.USER).findOne({
         email: user.email,
@@ -49,17 +49,18 @@ export const authOptions = {
       if (token) {
         session.role = token?.role;
         session.email = token?.email;
+        session.name = token?.name;
       }
       return session;
     },
     async jwt({ token, user, account, profile, isNewUser }) {
-      console.log("from jwt test", account);
       if (user) {
         const dbUser = await dbConnect(collections.USER).findOne({
           email: user.email,
         });
         token.role = dbUser?.role;
         token.email = dbUser?.email;
+        token.name = dbUser?.name;
       }
       return token;
     },

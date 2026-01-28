@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import CartButton from "../buttons/CartButton";
 
 const ToysCard = ({ toy }) => {
   const {
@@ -71,9 +72,9 @@ const ToysCard = ({ toy }) => {
             className="flex-1 btn btn-primary btn-outline py-2 rounded-lg transition">
             See Details
           </Link>
-          <button className="flex-1 btn btn-primary py-2 rounded-lg hover:bg-orange-700 transition">
-            Buy Now
-          </button>
+          <div className="flex-1">
+            <CartButton product={{ ...toy, _id: _id.toString() }}></CartButton>
+          </div>
         </div>
       </div>
     </div>
