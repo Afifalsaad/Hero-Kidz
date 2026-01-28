@@ -3,7 +3,6 @@ import Logo from "./Logo";
 import NavLinks from "../buttons/NavLinks";
 import { FiShoppingCart } from "react-icons/fi";
 import Link from "next/link";
-import LoginButton from "../buttons/LoginButton";
 import AuthButton from "../buttons/AuthButton";
 
 const Navbar = () => {

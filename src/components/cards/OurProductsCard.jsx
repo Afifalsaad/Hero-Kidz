@@ -1,7 +1,8 @@
+"use client";
 import Image from "next/image";
-import Link from "next/link";
 import React from "react";
 import CartButton from "../buttons/CartButton";
+import { getCartItem } from "@/actions/server/cart";
 
 const ToysCard = ({ toy }) => {
   const {
@@ -67,11 +68,12 @@ const ToysCard = ({ toy }) => {
 
         {/* Buttons */}
         <div className="mt-auto flex gap-3">
-          <Link
+          <button
+            onClick={() => getCartItem()}
             href={`products/${_id}`}
             className="flex-1 btn btn-primary btn-outline py-2 rounded-lg transition">
             See Details
-          </Link>
+          </button>
           <div className="flex-1">
             <CartButton product={{ ...toy, _id: _id.toString() }}></CartButton>
           </div>

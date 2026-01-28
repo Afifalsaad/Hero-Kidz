@@ -8,7 +8,6 @@ const cartCollection = dbConnect(collections.CART);
 
 export const handleCart = async ({ product, inc = true }) => {
   const user = await getServerSession(authOptions);
-  console.log(user);
   if (!user) return { message: "Please Login" };
 
   const query = { email: user?.email, productId: product?._id };
@@ -38,5 +37,18 @@ export const handleCart = async ({ product, inc = true }) => {
 
     const result = await cartCollection.insertOne(newData);
     return { success: result.acknowledged };
+  }
+};
+
+export const getCartItem = async () => {
+  try {
+    const user = await getServerSession(authOptions);
+    if (!user) return [];
+
+    const query = { email: user?.email };
+    const result = await cartCollection.find(query).toArray();
+    return result;
+  } catch (err) {
+    console.log(err);
   }
 };
