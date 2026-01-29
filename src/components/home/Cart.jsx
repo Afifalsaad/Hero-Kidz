@@ -1,6 +1,7 @@
 "use client";
 import React, { useMemo, useState } from "react";
 import CartItems from "../cards/CartItems";
+import Link from "next/link";
 
 const Cart = ({ cartItems = [] }) => {
   const [items, setItems] = useState(cartItems);
@@ -43,15 +44,15 @@ const Cart = ({ cartItems = [] }) => {
               />
             ))
           ) : (
-            <div className="bg-base-200 p-20 rounded-3xl text-center border-2 border-dashed border-base-300">
-              <p className="text-xl opacity-50 font-semibold italic">
+            <div className=" p-20 rounded-3xl text-center">
+              <p className="text-xl opacity-50 font-semibold">
                 Your cart is empty.
               </p>
             </div>
           )}
         </div>
 
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1 sticky">
           <div className="card bg-base-100 shadow-2xl border border-base-200 sticky top-24">
             <div className="card-body p-6">
               <h2 className="card-title text-2xl font-bold mb-4 border-b pb-3">
@@ -95,7 +96,7 @@ const Cart = ({ cartItems = [] }) => {
                 <div className="divider my-1"></div>
 
                 <div className="flex justify-between items-center pt-2">
-                  <span className="text-lg font-bold">Total Amount:</span>
+                  <span className="text-lg font-semibold">Total Amount:</span>
                   <span className="text-3xl font-black text-primary">
                     ৳{totalPrice + deliveryCharge}
                   </span>
@@ -104,12 +105,16 @@ const Cart = ({ cartItems = [] }) => {
 
               {/* Confirm Order Button */}
               <div className="card-actions mt-8">
-                <button
-                  className="btn btn-primary btn-block text-white font-bold text-lg hover:scale-[1.02] active:scale-[0.98] transition-all"
-                  disabled={items.length === 0}
-                  onClick={() => console.log("Confirming order for: ", items)}>
-                  Confirm Order
-                </button>
+                <Link href={"/checkout"}>
+                  <button
+                    className="btn btn-primary text-white text-md hover:scale-[1.02] active:scale-[0.98] transition-all"
+                    disabled={items.length === 0}
+                    onClick={() =>
+                      console.log("Confirming order for: ", items)
+                    }>
+                    Confirm Order
+                  </button>
+                </Link>
               </div>
             </div>
           </div>
