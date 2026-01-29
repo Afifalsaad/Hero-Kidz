@@ -8,8 +8,8 @@ export default async function Home() {
   const session = await getServerSession(authOptions);
   return (
     <div className="space-y-20">
-      <Test></Test>
-      {JSON.stringify(session)}
+      {/* <Test></Test>
+      {JSON.stringify(session)} */}
       <section>
         <Banner></Banner>
       </section>

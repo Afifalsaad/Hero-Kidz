@@ -1,15 +1,14 @@
 "use client";
 
+import { createOrder } from "@/actions/server/order";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+import Swal from "sweetalert2";
 
 const CheckOut = ({ cartItems }) => {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phoneNum: "",
-    address: "",
-    deliveryInfo: "",
-  });
+  const session = useSession();
+  const router = useRouter();
 
   const totalItem = useMemo(
     () => cartItems.reduce((acm, item) => acm + item.quantity, 0),
@@ -21,17 +20,37 @@ const CheckOut = ({ cartItems }) => {
     [cartItems]
   );
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
+  const handleSubmit = async (e) => {
+    const form = e.target;
 
-  const handleSubmit = (e) => {
+    const payload = {
+      name: form.name.value,
+      email: form.email.value,
+      address: form.address.value,
+      phoneNo: form.phoneNum.value,
+      deliveryInfo: form.deliveryInfo.value,
+    };
+
     e.preventDefault();
-    console.log("checkout data", form);
+    const result = await createOrder(payload);
+    if (result.success) {
+      Swal.fire("success", "order added", "success");
+      router.push("/");
+    } else {
+      Swal.fire("error", "something went wrong", "error");
+      router.push("/cart");
+    }
   };
 
   const deliveryCharge = cartItems.length > 0 ? 60 : 0;
+
+  if (session.status == "loading") {
+    return (
+      <h2 className="flex items-center justify-center min-h-screen">
+        Loading...
+      </h2>
+    );
+  }
   return (
     <div>
       <h2 className="text-lg my-5 ml-5">Delivery Information</h2>
@@ -47,7 +66,8 @@ const CheckOut = ({ cartItems }) => {
                 </label>
                 <input
                   name="name"
-                  onChange={handleChange}
+                  value={session?.data.user.name}
+                  readOnly
                   type="text"
                   placeholder="Enter your name"
                   className="px-4 py-3.5 pr-8 text-black font-medium w-full text-sm border-2 border-gray-200 focus:border-blue-500 rounded-sm outline-none"
@@ -60,7 +80,6 @@ const CheckOut = ({ cartItems }) => {
                 </label>
                 <input
                   name="phoneNum"
-                  onChange={handleChange}
                   type="number"
                   placeholder="Enter phone no."
                   className="px-4 py-3.5 pr-8 font-medium w-full text-sm border-2 border-gray-200 focus:border-blue-500 rounded-sm outline-none"
@@ -72,7 +91,6 @@ const CheckOut = ({ cartItems }) => {
                   Address
                 </label>
                 <input
-                  onChange={handleChange}
                   name="address"
                   type="text"
                   placeholder="Enter address"
@@ -85,7 +103,8 @@ const CheckOut = ({ cartItems }) => {
                   Email
                 </label>
                 <input
-                  onChange={handleChange}
+                  value={session?.data.user.email}
+                  readOnly
                   name="email"
                   type="email"
                   placeholder="Enter email"
@@ -98,7 +117,6 @@ const CheckOut = ({ cartItems }) => {
                   Delivery Description
                 </label>
                 <textarea
-                  onChange={handleChange}
                   name="deliveryInfo"
                   type="text"
                   rows={5}

@@ -124,3 +124,14 @@ export const decreaseItemDb = async (id, quantity) => {
     return { success: Boolean(result.modifiedCount) };
   } catch {}
 };
+
+export const clearCart = async () => {
+  try {
+    const user = await getServerSession(authOptions);
+    if (!user) return [];
+
+    const query = { email: user?.email };
+    const result = await cartCollection.deleteMany(query);
+    return result;
+  } catch {}
+};
