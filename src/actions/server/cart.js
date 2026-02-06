@@ -9,6 +9,8 @@ import { cache } from "react";
 
 const cartCollection = dbConnect(collections.CART);
 
+// export const dynamic = "force-dynamic";
+
 export const handleCart = async ({ product, inc = true }) => {
   const user = await getServerSession(authOptions);
   if (!user) return { message: "Please Login" };

@@ -3,8 +3,10 @@
 import { createOrder } from "@/actions/server/order";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import Swal from "sweetalert2";
+
+// export const dynamic = "force-dynamic";
 
 const CheckOut = ({ cartItems }) => {
   const session = useSession();

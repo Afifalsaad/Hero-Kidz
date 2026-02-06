@@ -2,6 +2,8 @@ import { getCartItem } from "@/actions/server/cart";
 import CheckOut from "@/components/home/CheckOut";
 import React from "react";
 
+export const dynamic = "force-dynamic";
+
 const checkOutPage = async () => {
   const rawCartItems = await getCartItem();
   const cartItems = JSON.parse(JSON.stringify(rawCartItems));
